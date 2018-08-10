@@ -1,2 +1,2 @@
-# terraform-microsoft-canada
-Example code for Microsoft Canada virtual conference
+# microsoft-oss-conference
+Example code for Microsoft Canada OSS conference
