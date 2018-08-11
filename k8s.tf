@@ -8,7 +8,7 @@ resource "azurerm_kubernetes_cluster" "gophersearch" {
     admin_username = "acctestuser1"
 
     ssh_key {
-      key_data = "${tls_private_key.server.public_key_pem}"
+      key_data = "${tls_private_key.server.public_key_openssh}"
     }
   }
 

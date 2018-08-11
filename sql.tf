@@ -31,17 +31,15 @@ resource "azurerm_postgresql_database" "test" {
 }
 
 resource "null_resource" "db" {
-  # Changes to any instance of the cluster requires re-provisioning
+  # Changes to any instance of the db cluster requires re-provisioning
   triggers {
     cluster_instance_ids = "${join(",", azurerm_postgresql_database.test.*.id)}"
   }
 
-  # Bootstrap script can run on any instance of the cluster
-  # So we just choose the first in this case
   connection {
     host        = "${azurerm_public_ip.jumpbox.fqdn}"
     user        = "azureuser"
-    private_key = "${tls_private_key.server.private_key}"
+    private_key = "${tls_private_key.server.private_key_pem}"
   }
 
   // Copy the files for setting up the database with defaults
@@ -55,11 +53,11 @@ resource "null_resource" "db" {
     destination = "/tmp/database.sql"
   }
 
+  // Copy the initial data to the database
   provisioner "remote-exec" {
-    # Bootstrap script called with private_ip of each node in the clutser
     inline = [
       "chmod +x /tmp/configure_db.sh",
-      "./configure_db.sh ${azurerm_postgresql_server.test.fqdn} ${azurerm_postgresql_server.test.name}@${var.db_user} ${var.db_pass}",
+      "/tmp/configure_db.sh ${azurerm_postgresql_server.test.fqdn} ${azurerm_postgresql_server.test.name}@${var.db_user} ${var.db_pass}",
     ]
   }
 }
