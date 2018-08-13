@@ -3,17 +3,17 @@ Example code for Microsoft Canada OSS conference
 
 Work in Progress
 
-Components:
-Azure Kubernetes Cluster
-Application provisioned to K8s
-Bastion host to access DB, etc
-Azure Managed Postgres
-DNSimple DNS settings
-Random provider for passwords
-Dynamic Private Key generation
-Output Variables
-Input Variables
-Remote Provisioners
+## Components
+* Azure Kubernetes Cluster
+* Application provisioned to K8s
+* Bastion host to access DB, etc
+* Azure Managed Postgres
+* DNSimple DNS settings
+* Random provider for passwords
+* Dynamic Private Key generation
+* Output Variables
+* Input Variables
+* Remote Provisioners
 
 
 ## Environment variables
