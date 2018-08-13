@@ -1,6 +1,14 @@
+// Remote state config
+terraform {
+  backend "azurerm" {
+    storage_account_name = "nictfremotestate"
+    container_name       = "tfstate"
+    key                  = "dev.terraform.tfstate"
+  }
+}
+
 provider "azurerm" {}
 
-/*
 provider "kubernetes" {
   host                   = "${azurerm_kubernetes_cluster.gophersearch.kube_config.0.host}"
   username               = "${azurerm_kubernetes_cluster.gophersearch.kube_config.0.username}"
@@ -9,7 +17,9 @@ provider "kubernetes" {
   client_key             = "${base64decode(azurerm_kubernetes_cluster.gophersearch.kube_config.0.client_key)}"
   cluster_ca_certificate = "${base64decode(azurerm_kubernetes_cluster.gophersearch.kube_config.0.cluster_ca_certificate)}"
 }
-*/
+
+provider "dnsimple" {}
+
 // Create a private key for the bastion host and k8s
 resource "tls_private_key" "server" {
   algorithm = "RSA"

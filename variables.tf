@@ -1,6 +1,6 @@
 variable "resource_group_name" {
   description = "Name of the resource group to create"
-  default     = "ms-oss-conference"
+  default     = "ms-oss"
 }
 
 variable "location" {
@@ -16,18 +16,10 @@ variable "client_secret" {
 }
 
 variable "db_user" {
-  default = "psqladminun"
-}
-
-variable "db_pass" {
-  default = "H@Sh1CoR3"
+  default = "psqladmin"
 }
 
 variable "jumpbox_user" {
   description = "remove this and use random string"
   default     = "azureuser"
-}
-
-variable "jumpbox_pass" {
-  default = "Password1234!"
 }

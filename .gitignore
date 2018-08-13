@@ -7,3 +7,7 @@
 
 # .tfvars files
 *.tfvars
+
+# App specific
+kube_config.yml
+server.pem

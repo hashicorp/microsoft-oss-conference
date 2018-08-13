@@ -1,5 +1,10 @@
-resource "azurerm_postgresql_server" "test" {
-  name                = "postgresql-server-${var.resource_group_name}"
+resource "random_string" "db_password" {
+  length  = 16
+  special = false
+}
+
+resource "azurerm_postgresql_server" "gophersearch" {
+  name                = "pgsql-${var.resource_group_name}"
   location            = "westus"
   resource_group_name = "${azurerm_resource_group.default.name}"
 
@@ -17,15 +22,23 @@ resource "azurerm_postgresql_server" "test" {
   }
 
   administrator_login          = "${var.db_user}"
-  administrator_login_password = "${var.db_pass}"
+  administrator_login_password = "${random_string.db_password.result}"
   version                      = "9.5"
-  ssl_enforcement              = "Enabled"
+  ssl_enforcement              = "Disabled"
 }
 
-resource "azurerm_postgresql_database" "test" {
+resource "azurerm_postgresql_firewall_rule" "gophersearch" {
+  name                = "office"
+  resource_group_name = "${azurerm_resource_group.default.name}"
+  server_name         = "${azurerm_postgresql_server.gophersearch.name}"
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
+}
+
+resource "azurerm_postgresql_database" "gophersearch" {
   name                = "gophersearch"
   resource_group_name = "${azurerm_resource_group.default.name}"
-  server_name         = "${azurerm_postgresql_server.test.name}"
+  server_name         = "${azurerm_postgresql_server.gophersearch.name}"
   charset             = "UTF8"
   collation           = "English_United States.1252"
 }
@@ -33,7 +46,7 @@ resource "azurerm_postgresql_database" "test" {
 resource "null_resource" "db" {
   # Changes to any instance of the db cluster requires re-provisioning
   triggers {
-    cluster_instance_ids = "${join(",", azurerm_postgresql_database.test.*.id)}"
+    cluster_instance_ids = "${join(",", azurerm_postgresql_database.gophersearch.*.id)}"
   }
 
   connection {
@@ -44,11 +57,6 @@ resource "null_resource" "db" {
 
   // Copy the files for setting up the database with defaults
   provisioner "file" {
-    source      = "scripts/configure_db.sh"
-    destination = "/tmp/configure_db.sh"
-  }
-
-  provisioner "file" {
     source      = "scripts/database.sql"
     destination = "/tmp/database.sql"
   }
@@ -56,8 +64,7 @@ resource "null_resource" "db" {
   // Copy the initial data to the database
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /tmp/configure_db.sh",
-      "/tmp/configure_db.sh ${azurerm_postgresql_server.test.fqdn} ${azurerm_postgresql_server.test.name}@${var.db_user} ${var.db_pass}",
+      "PGPASSWORD=${random_string.db_password.result} psql \"sslmode=disable host=${azurerm_postgresql_server.gophersearch.fqdn} port=5432 dbname=gophersearch\" --username=${var.db_user}@${azurerm_postgresql_server.gophersearch.name} < /tmp/database.sql",
     ]
   }
 }

@@ -1,3 +1,8 @@
+resource "random_string" "jumpbox_password" {
+  length  = 16
+  special = false
+}
+
 resource "azurerm_public_ip" "jumpbox" {
   name                         = "jumpbox-public-ip"
   location                     = "${var.location}"
@@ -72,7 +77,7 @@ resource "azurerm_virtual_machine" "jumpbox" {
   os_profile {
     computer_name  = "jumpbox"
     admin_username = "${var.jumpbox_user}"
-    admin_password = "${var.jumpbox_pass}"
+    admin_password = "${random_string.jumpbox_password.result}"
   }
 
   os_profile_linux_config {
@@ -86,5 +91,18 @@ resource "azurerm_virtual_machine" "jumpbox" {
 
   tags {
     environment = "dev"
+  }
+
+  connection {
+    host        = "${azurerm_public_ip.jumpbox.fqdn}"
+    user        = "azureuser"
+    private_key = "${tls_private_key.server.private_key_pem}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update",
+      "sudo apt-get install -y postgresql-client",
+    ]
   }
 }

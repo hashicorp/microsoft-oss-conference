@@ -1,4 +1,3 @@
-/*
 resource "kubernetes_service" "gophersearch" {
   metadata {
     name = "gophersearch"
@@ -12,8 +11,8 @@ resource "kubernetes_service" "gophersearch" {
     session_affinity = "ClientIP"
 
     port {
-      port        = 3000
-      target_port = 80
+      port        = 80
+      target_port = 3000
     }
 
     type = "LoadBalancer"
@@ -33,8 +32,16 @@ resource "kubernetes_pod" "gophersearch" {
     container {
       image = "nicholasjackson/gophersearch:latest"
       name  = "gophersearch"
+
+      env {
+        name  = "DATABASE_URL"
+        value = "postgresql://${var.db_user}@${azurerm_postgresql_server.gophersearch.name}:${random_string.db_password.result}@${azurerm_postgresql_server.gophersearch.fqdn}:5432/gophersearch?sslmode=disable"
+      }
+
+      env {
+        name  = "GO_ENV"
+        value = "production"
+      }
     }
   }
 }
-*/
-
