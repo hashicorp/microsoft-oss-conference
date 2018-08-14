@@ -31,10 +31,6 @@ spec:
         - containerPort: 8201
           name: cluster-port
           protocol: TCP
-        resources:
-          requests:
-            cpu: '500m'
-            memory: '1Gi'
         env:
         - name: POD_IP_ADDR
           valueFrom:
@@ -60,8 +56,10 @@ metadata:
   name: vault
   labels:
     app: vault
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: vault
   ports:

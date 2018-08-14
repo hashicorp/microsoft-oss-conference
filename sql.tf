@@ -1,6 +1,7 @@
 resource "random_string" "db_password" {
-  length  = 16
-  special = false
+  length      = 16
+  special     = false
+  min_numeric = 5
 }
 
 resource "azurerm_postgresql_server" "gophersearch" {

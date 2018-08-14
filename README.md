@@ -37,9 +37,27 @@ export DNSIMPLE_TOKEN=xxxxxxxx
 export DNSIMPLE_ACCOUNT=xxxxxx
 ```
 
+## Setup
+
+* Follow the [instructions](https://www.terraform.io/docs/providers/azurerm/authenticating_via_service_principal.html#creating-a-service-principal-using-the-azure-cli) to create a service principle required to supply `client_id` and `client_secret` to Terraform.
+
+## Usage
+
+```bash
+$(terraform output bastion_host_ssh)
+```
+
+```bash
+$(terraform output configure_kube_config)
+```
+
 ## TODO
 - [x] Complete configuration for basic app with K8s, Postgres.
 - [x] Add remote state.
 - [x] Add Vault.
 - [x] Add Vault login for k8s.
 - [x] Provision dynamic credentials for Postgres via Consul Template.
+
+
+
+

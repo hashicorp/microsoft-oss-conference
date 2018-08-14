@@ -1,6 +1,6 @@
 variable "resource_group_name" {
   description = "Name of the resource group to create"
-  default     = "ms-oss"
+  default     = "ms-oss-mishra"
 }
 
 variable "location" {
@@ -22,4 +22,8 @@ variable "db_user" {
 variable "jumpbox_user" {
   description = "remove this and use random string"
   default     = "azureuser"
+}
+
+variable "vault_version" {
+  default = "0.10.4"
 }

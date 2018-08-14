@@ -102,7 +102,16 @@ resource "azurerm_virtual_machine" "jumpbox" {
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get update",
-      "sudo apt-get install -y postgresql-client",
+      "sudo apt-get install -y postgresql-client jq unzip apt-transport-https",
+      "curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -",
+      "sudo touch /etc/apt/sources.list.d/kubernetes.list",
+      "echo \"deb http://apt.kubernetes.io/ kubernetes-xenial main\" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list",
+      "sudo apt-get update",
+      "sudo apt-get install -y kubectl",
+      "curl --silent --location --output vault.zip https://releases.hashicorp.com/vault/${var.vault_version}/vault_${var.vault_version}_linux_amd64.zip",
+      "unzip vault.zip",
+      "sudo mv vault /usr/local/bin/vault",
+      "rm vault.zip",
     ]
   }
 }
