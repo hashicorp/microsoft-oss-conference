@@ -99,6 +99,7 @@ resource "azurerm_virtual_machine" "jumpbox" {
     private_key = "${tls_private_key.server.private_key_pem}"
   }
 
+  // Install postgres-client, kubectl, and vault.
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get update",

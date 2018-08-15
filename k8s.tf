@@ -15,7 +15,7 @@ resource "azurerm_kubernetes_cluster" "gophersearch" {
   agent_pool_profile {
     name            = "default"
     count           = 1
-    vm_size         = "Standard_D1_v2"
+    vm_size         = "Standard_DS2_v2"
     os_type         = "Linux"
     os_disk_size_gb = 30
 
@@ -94,9 +94,13 @@ resource "null_resource" "provision-workload" {
   provisioner "remote-exec" {
     inline = [
       "kubectl apply -f /tmp/kubernetes/vault.yaml",
+      "sleep 20",
       "sudo chmod 755 /tmp/kubernetes/scripts/vault-dynamic-secret-setup.sh",
-      "PG_USER=\"${var.db_user}\" PG_PASSWORD=\"${random_string.db_password.result}\" PG_DB_NAME=\"${azurerm_postgresql_server.gophersearch.name}\" PG_HOST=\"${azurerm_postgresql_server.gophersearch.fqdn}\" CLUSTER_NAME=\"${azurerm_kubernetes_cluster.gophersearch.name}\" ./tmp/kubernetes/scripts/vault-dynamic-secret-setup.sh",
     ]
   }
 
+  // This should be a remote-exec command but for now executing locally?
+  provisioner "local-exec" {
+    command = "echo \"\"; echo\"\"; echo 'PG_USER=\"${var.db_user}\" PG_PASSWORD=\"${random_string.db_password.result}\" PG_DB_NAME=\"${azurerm_postgresql_server.gophersearch.name}\" PG_HOST=\"${azurerm_postgresql_server.gophersearch.fqdn}\" CLUSTER_NAME=\"${azurerm_kubernetes_cluster.gophersearch.name}\" ./tmp/kubernetes/scripts/vault-dynamic-secret-setup.sh'"
+  }
 }

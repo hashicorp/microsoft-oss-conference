@@ -43,12 +43,34 @@ export DNSIMPLE_ACCOUNT=xxxxxx
 
 ## Usage
 
+Terraform commands
+
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+
+### Accessing the bastion host
+
 ```bash
 $(terraform output bastion_host_ssh)
 ```
 
+### Accessing the Kubernetes cluster
+
 ```bash
 $(terraform output configure_kube_config)
+```
+
+```bash
+kubectl get nodes
+```
+
+Expected output
+
+```bash
+TODO
 ```
 
 ## TODO
@@ -57,7 +79,7 @@ $(terraform output configure_kube_config)
 - [x] Add Vault.
 - [x] Add Vault login for k8s.
 - [x] Provision dynamic credentials for Postgres via Consul Template.
-
+- [ ] Add a configmap for gophersearch `DATABASE_URL` (use environment variable in the kubernetes deployment configuration).
 
 
 

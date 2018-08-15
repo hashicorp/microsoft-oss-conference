@@ -1,11 +1,11 @@
 // Remote state config
-#terraform {
-#  backend "azurerm" {
-#    storage_account_name = "nictfremotestate"
-#    container_name       = "tfstate"
-#    key                  = "dev.terraform.tfstate"
-#  }
-#}
+terraform {
+  backend "azurerm" {
+    storage_account_name = "storageaccountname"
+    container_name       = "tfstate"
+    key                  = "dev.terraform.tfstate"
+  }
+}
 
 provider "azurerm" {}
 
@@ -27,7 +27,7 @@ resource "tls_private_key" "server" {
 }
 
 // Save the private key locally in the root directory of the project 
-//rather than using an output variable to access it.
+// rather than using an output variable to access it.
 resource "null_resource" "save-key" {
   triggers {
     key = "${tls_private_key.server.private_key_pem}"

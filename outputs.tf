@@ -9,10 +9,6 @@ output "bastion_host_ssh" {
   value = "ssh -q -i ${path.module}/.ssh/id_rsa -o UserKnownHostsFile=/dev/null -o CheckHostIP=no -o StrictHostKeyChecking=no ${var.jumpbox_user}@${azurerm_public_ip.jumpbox.fqdn}"
 }
 
-#output "gophersearch_url" {
-#  value = "${kubernetes_service.gophersearch.load_balancer_ingress.0.ip}"
-#}
-
 output "kube_config" {
   value = "${azurerm_kubernetes_cluster.gophersearch.kube_config_raw}"
 }
