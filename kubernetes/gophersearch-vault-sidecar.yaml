@@ -1,0 +1,91 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gophersearch-vault-sidecar
+  labels:
+    app: gophersearch-vault-sidecar
+spec:
+  volumes:
+  - name: secrets
+    emptyDir: {}
+  - name: vault-token
+    emptyDir:
+      medium: Memory
+
+  initContainers:
+  # The vault-authenticator container authenticates the container using the
+  # kubernetes auth method and puts the resulting token on the filesystem.
+  - name: vault-authenticator
+    image: registry.hub.docker.com/anubhavmishra/vault-kubernetes-authenticator:0.2.0
+    imagePullPolicy: Always
+    volumeMounts:
+    - name: vault-token
+      mountPath: /home/vault
+    env:
+    - name: TOKEN_DEST_PATH
+      value: /home/vault/.vault-token
+    - name: VAULT_ADDR
+      value: "http://vault:8200"
+    - name: VAULT_ROLE
+      value: gopher
+
+  containers:
+    # The consul-template container will pull secrets from Vault and expose
+    # them as files on disk.
+  - name: consul-template
+    image: registry.hub.docker.com/anubhavmishra/consul-template:alpine
+    imagePullPolicy: Always
+    volumeMounts:
+    - name: secrets
+      mountPath: /etc/secrets
+    - name: vault-token
+      mountPath: /home/vault
+    env:
+    - name: HOME
+      value: /home/vault
+    - name: VAULT_ADDR
+      value: "http://vault:8200"
+    - name: CT_LOCAL_CONFIG
+      value: |
+        vault {}
+
+        template {
+          contents = <<EOH
+            {{- with secret "database/creds/grant-all" }}DATABASE_URL="postgresql://{{ .Data.username }}@{{ with secret "secret/data/gophersearch" }}{{ .Data.data.postgres_server_name }}{{ end }}:{{ .Data.password }}@{{ with secret "secret/data/gophersearch" }}{{ .Data.data.postgres_server_fqdn }}{{ end }}:5432/gophersearch?sslmode=disable"{{ end }}
+          EOH
+          destination = "/etc/secrets/config"
+        }
+  - name: gophersearch
+    image: nicholasjackson/gophersearch:latest
+    imagePullPolicy: Always
+    volumeMounts:
+    - name: secrets
+      mountPath: /etc/secrets
+    - name: vault-token
+      mountPath: /home/vault
+    env:
+    - name: HOME
+      value: /home/vault
+    - name: GO_ENV
+      value: "production"
+    ports:
+      - containerPort: 3000
+        name: http-port
+        protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gophersearch
+  labels:
+    app: gophersearch-vault-sidecar
+spec:
+  type: LoadBalancer
+  selector:
+    app: gophersearch-vault-sidecar
+  ports:
+  - name: http-port
+    port: 80
+    targetPort: 3000
+    protocol: TCP
