@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MIT
+
 provider "azurerm" {}
 
 // Create a private key for the bastion host and k8s
