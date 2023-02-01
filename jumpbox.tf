@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MIT
+
 resource "random_string" "jumpbox_password" {
   length  = 16
   special = false

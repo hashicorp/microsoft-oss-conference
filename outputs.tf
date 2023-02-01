@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MIT
+
 output "bastion_host" {
   value = "${azurerm_public_ip.jumpbox.fqdn}"
 }

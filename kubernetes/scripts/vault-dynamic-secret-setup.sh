@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MIT
+
 
 # This script is adpated to work with non-gke environments such as aks.
 # Originally created by Seth Vargo (https://github.com/sethvargo). 

@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MIT
+
 resource "azurerm_kubernetes_cluster" "gophersearch" {
   name                = "gophersearch"
   location            = "${azurerm_resource_group.default.location}"

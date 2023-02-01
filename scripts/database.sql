@@ -1,3 +1,6 @@
+-- Copyright (c) HashiCorp, Inc.
+-- SPDX-License-Identifier: MIT
+
 
 CREATE EXTENSION pgcrypto;
 DROP TABLE if exists gophers;

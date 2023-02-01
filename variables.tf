@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MIT
+
 variable "resource_group_name" {
   description = "Name of the resource group to create"
   default     = "ms-oss"

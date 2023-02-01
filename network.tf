@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MIT
+
 module "network" {
   source              = "Azure/network/azurerm"
   location            = "${var.location}"
