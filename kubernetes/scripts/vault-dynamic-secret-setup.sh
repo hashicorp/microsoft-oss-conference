@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2018, 2026
+
 
 # This script is adpated to work with non-gke environments such as aks.
 # Originally created by Seth Vargo (https://github.com/sethvargo). 

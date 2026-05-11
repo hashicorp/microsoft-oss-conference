@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2018, 2026
+
 module "network" {
   source              = "Azure/network/azurerm"
   location            = "${var.location}"

@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2018, 2026
+
 resource "azurerm_kubernetes_cluster" "gophersearch" {
   name                = "gophersearch"
   location            = "${azurerm_resource_group.default.location}"

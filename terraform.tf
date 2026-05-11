@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2018, 2026
+
 provider "azurerm" {}
 
 // Create a private key for the bastion host and k8s

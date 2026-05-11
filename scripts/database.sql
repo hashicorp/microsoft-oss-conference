@@ -1,3 +1,5 @@
+-- Copyright IBM Corp. 2018, 2026
+
 
 CREATE EXTENSION pgcrypto;
 DROP TABLE if exists gophers;
