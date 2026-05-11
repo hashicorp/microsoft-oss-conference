@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2018, 2026
+
 variable "resource_group_name" {
   description = "Name of the resource group to create"
   default     = "ms-oss"

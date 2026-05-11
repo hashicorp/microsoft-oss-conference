@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2018, 2026
+
 output "bastion_host" {
   value = "${azurerm_public_ip.jumpbox.fqdn}"
 }

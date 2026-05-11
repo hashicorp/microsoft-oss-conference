@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2018, 2026
+
 resource "random_string" "db_password" {
   length      = 16
   special     = false
